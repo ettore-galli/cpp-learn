@@ -54,6 +54,25 @@ void print_array(int lista[], long unsigned int lunghezza)
     fmt::print("]\n");
 }
 
+union CalcResult
+{
+    double result;
+    char error[50];
+};
+
+CalcResult dividi(double dividendo, double divisore)
+{
+    CalcResult result{};
+    if (divisore == 0.0)
+    {
+        fmt::print("CASO DIVISORE ZERO \n");
+        strcpy(result.error, "Ciccia");
+        return result;
+    }
+    result.result = dividendo / divisore;
+    return result;
+};
+
 int main()
 {
 
@@ -77,6 +96,13 @@ int main()
         {25, 60, 38, 1, 90}};
 
     gioca_schedina(sl);
+
+    double dividendo = 7;
+    for (double divisore : {4, 0})
+    {
+        auto ris = dividi(dividendo, divisore);
+        fmt::print("{} / {} = {} [{}] \n", 7, 4, ris.result, ris.error);
+    }
 
     return 0;
 }
