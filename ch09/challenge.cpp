@@ -1,45 +1,127 @@
 // hello.cpp by Bill Weinman [bw.org]
 // updated 2022-05-19
-#include <iostream>
+
 #include <cstdint>
-#define FMT_HEADER_ONLY
-#include "format.h"
+#include <string>
+#include <vector>
 
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include <format>
+
+using std::cin;
 using std::cout;
+using std::string;
+using std::stringstream;
+using std::vector;
 
-using fmt::format;
+using std::format;
 
 template <typename T>
-T factorial(T n)
+void printVector(vector<T> *v)
 {
-    T f{1};
-    for (T i = 1; i < n; ++i)
+    cout << format("{:-^50} \n", "vector");
+    for (auto it = v->begin(); it < v->end(); ++it)
     {
-        f *= i + 1;
+        cout << format("{} \n", *it);
     }
-    return f;
+};
+
+template <typename T>
+struct Frac
+{
+    T n;
+    T d;
+};
+
+template <typename T>
+
+struct std::formatter<Frac<T>> : std::formatter<unsigned>
+{
+    template <typename C>
+    auto format(const Frac<T> &frazione, C &contesto) const
+    {
+        return format_to(contesto.out(), "{:^6}\n-------\n {:^6}\n", frazione.n, frazione.d);
+    }
+};
+
+struct Item
+{
+    long sku;
+    std::string name;
+    std::string description;
+};
+
+vector<string> split(string line, char delimiter)
+{
+    long pos{0};
+    long endpos{0};
+
+    vector<string> splitted{};
+
+    while (pos < sizeof(line))
+    {
+        endpos = line.find("\t", pos);
+        if (endpos == -1)
+        {
+            splitted.push_back(line.substr(pos, sizeof(line) - pos));
+            break;
+        }
+        splitted.push_back(line.substr(pos, endpos - pos));
+        pos = endpos + 1;
+    }
+
+    return splitted;
 }
 
-int main()
+vector<string> split2(string line, char delimiter)
 {
+    stringstream ss(line);
 
-    for (unsigned long n = 1; n < 10; n++)
+    vector<string> splitted{};
+
+    char chunk[128]{};
+
+    while (ss.getline(chunk, sizeof(chunk), '\t'))
     {
-        unsigned long f = factorial(n);
-        fmt::print("{}!= {}\n", n, f);
+        splitted.push_back(chunk);
     }
 
-    short n_short = 4;
-    fmt::print("{}\n", factorial(n_short));
+    return splitted;
+}
 
-    int n_int = 5;
-    fmt::print("{}\n", factorial(n_int));
+void getfile(const char filename[])
+{
+    std::ifstream infile(filename);
+    char data[128];
+    std::string line;
 
-    int n_float = 7;
-    fmt::print("{}\n", factorial(n_float));
+    std::string inp{};
+    while (infile.good())
+    {
 
-    long long unsigned int nllu = 23;
-    fmt::print("{}\n", factorial(nllu));
+        infile.getline(data, sizeof(data));
+
+        line = data;
+        cout << line << "\n";
+
+        vector<string> splitted = split(line, '\t');
+
+        Item it{
+            std::stoi(splitted[0]), splitted[1], splitted[2]};
+        cout << "sku ....: " << it.sku << "\n";
+        cout << "name ...: " << it.name << "\n";
+        cout << "descr ..: " << it.description << "\n";
+    }
+};
+
+int main()
+
+{
+
+    getfile("./data/items.txt");
 
     return 0;
 }
