@@ -21,64 +21,46 @@ apt install libfmt-dev
 
 <https://fmt.dev/11.0/get-started/#building-from-source>
 
-## Istall GCC
+## Environment setup
 
-<https://gcc.gnu.org/install/configure.html>
-<https://askubuntu.com/questions/1513160/how-to-install-gcc-14-on-ubuntu-22-04-and-24-04>
-<https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/>
+Use gcc Docker image as devcontainer
 
-## Procedure copied from above links
+<https://hub.docker.com/_/gcc>
 
-```shell
-sudo apt install build-essential
-sudo apt install libmpfr-dev libgmp3-dev libmpc-dev -y
-wget <http://ftp.gnu.org/gnu/gcc/gcc-14.1.0/gcc-14.1.0.tar.gz>
-tar -xf gcc-14.1.0.tar.gz
-cd gcc-14.1.0
-./configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu \
-    --prefix=/usr/local/gcc-14.1.0 --enable-checking=release \
-    --enable-languages=c,c++ --disable-multilib --program-suffix=-14.1.0
+```.devcontainer/Dockerfile```
 
-make
-sudo make install
-
-# And if you would like to make it the default...
-
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.1.0/bin/g++14.1.0 14
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.1.0/bin/gcc14.1.0 14
+```dockerfile
+FROM gcc:latest
 ```
 
-## Actual procedure used
+```.devcontainer/devcontainer.json```
 
-```shell
-sudo apt install build-essential
-sudo apt install libmpfr-dev libgmp3-dev libmpc-dev -y
+```json
+{
+ "name": "C++",
+ "build": {
+  "dockerfile": "Dockerfile"
+ }
+}
+```
 
-wget <http://ftp.gnu.org/gnu/gcc/gcc-14.1.0/gcc-14.1.0.tar.gz>
-tar -xf gcc-14.1.0.tar.gz
-cd gcc-14.1.0
+```.vscode/c_cpp_properties.json```
 
-./configure -v 
-
-make
-
-sudo make install
-
---
-
-sudo apt-get install software-properties-common # -> add-apt-repository
-
-sudo apt-get upgrade libstdc++6
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt-get install --only-upgrade libstdc++6
-
-
-
-# And if you would like to make it the default...
-
-sudo update-alternatives --config gcc
-
-# (was not necessary)
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.1.0/bin/g++14.1.0 14
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.1.0/bin/gcc14.1.0 14
+```json
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c23",
+            "cppStandard": "gnu++23",
+            "intelliSenseMode": "linux-clang-arm64"
+        }
+    ],
+    "version": 4
+}
 ```
