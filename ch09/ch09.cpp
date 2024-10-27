@@ -1,19 +1,18 @@
 // hello.cpp by Bill Weinman [bw.org]
 // updated 2022-05-19
-#include <iostream>
+
 #include <cstdint>
 #include <string>
 #include <vector>
-// #include <fmt/core.h>
 
-#define FMT_HEADER_ONLY
-#include "format.h"
+#include <iostream>
+#include <format>
 
 using std::cout;
 using std::string;
 using std::vector;
 
-using fmt::format;
+using std::format;
 
 template <typename T>
 void printVector(vector<T> *v)
@@ -35,5 +34,4 @@ int main()
     printVector(&v1);
 
     return 0;
-
 }
