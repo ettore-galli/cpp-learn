@@ -1,6 +1,19 @@
 {
 	"name": "C++",
 	"build": {
-		"dockerfile": "Dockerfile"
-	}
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	"customizations": {
+		"codespaces": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cmake-tools"
+			],
+		}
+	},
+	"remoteUser": "vscode"
 }
